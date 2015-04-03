@@ -41,6 +41,14 @@ install_packages() {
   apt-get install -y xvfb x11-xkb-utils xfonts-100dpi \
   xfonts-75dpi xfonts-scalable xfonts-cyrillic xserver-xorg-core dbus-x11 libfontconfig1-dev
 
+  # Install ruby (for compass)
+  apt-get install ruby-full
+  apt-get install rubygems-integration
+  
+  # Install compass
+  gem update --system
+  gem install compass
+
   # Install other software.
   phase_log "Installing other software..."
   apt-get install -y imagemagick default-jdk unzip git wget
