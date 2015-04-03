@@ -79,42 +79,26 @@ install_packages() {
   sudo -u selenium ln -s selenium-server-standalone-2.42.2.jar selenium-server-standalone.jar
 } 
 
+
+
 install_angularjs() {
   if [[ -e $angular_project_root_dir ]]
   then
-    cd $angular_project_root_dir/angular-seed
+    cd $angular_project_root_dir/myapp
   else
     # Create an AngularJS project directory.
     phase_log "Installing an AngularJS directory..."
     sudo -u $angular_owner mkdir $angular_project_root_dir
     cd $angular_project_root_dir
-    sudo -u $angular_owner git clone https://github.com/angular/angular-seed.git
-    cd angular-seed
+    sudo -u $angular_owner git clone https://github.com/bassman5/MickAngularSeed.git myapp
+    cd myapp
   fi
-
-  # Edit config files in AngularJS project directory.
-  # package.json
-  phase_log "Changing AngularJS confing files..."
-  sudo -u $angular_owner sed -i '/devDependencies/a \
-\ \ \ \ "karma-phantomjs-launcher": "~0.1.4",
-  ' package.json
-  sudo -u $angular_owner sed -i 's/"bower\ install"/"bower install --config.interactive=false"/' package.json
-
-  # karma.conf.js
-  sudo -u $angular_owner sed -i "s/\['Chrome'\]/\['PhantomJS'\]/" test/karma.conf.js
-  sudo -u $angular_owner sed -i '/plugins/a \
-\ \ \ \ \ \ \ \ \ \ \ \ '\''karma-phantomjs-launcher'\'',
-  ' test/karma.conf.js
-
-  # protractor-conf.js
-  sudo -u $angular_owner sed -i '3 a\
-\ \ seleniumAddress: '\''http://localhost:4444/wd/hub'\'',
-  ' test/protractor-conf.js
 
   # Install node modules.
   phase_log "Install node.js modules..."
-  cd $angular_project_root_dir/angular-seed
+  cd $angular_project_root_dir/myapp
   sudo -u $angular_owner npm install
+  npm install -g bower grunt-cli
   npm install -g protractor
 }
 
