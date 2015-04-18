@@ -7,8 +7,8 @@ shopt -s extglob  # Extend pattern matching
 
 # --- Global Constants and Variables ---
 
-angular_owner=ubuntu
-angular_project_root_dir=/home/ubuntu/src
+angular_owner=ec2-user
+angular_project_root_dir=~/repos/
 display=1
 screen=1
 resolution="800x600x16"
@@ -36,14 +36,22 @@ check_prerequisites() {
 }
 
 install_packages() {
-  # Install X-window and Xvfb.
-  phase_log "Installing x-window and xvfb..."
-  apt-get install -y xvfb x11-xkb-utils xfonts-100dpi \
-  xfonts-75dpi xfonts-scalable xfonts-cyrillic xserver-xorg-core dbus-x11 libfontconfig1-dev
+  # enable the optional redhat packages
+  subscription-manager repos --enable rhel-6-server-optional-rpms
+
+  # Install Xvfb.
+  phase_log "Installing xvfb..."
+
+  # yum search xvfb
+  yum install -y xorg-x11-server-Xvfb
+
+  
+  #apt-get install -y xvfb x11-xkb-utils xfonts-100dpi \
+  #xfonts-75dpi xfonts-scalable xfonts-cyrillic xserver-xorg-core dbus-x11 libfontconfig1-dev
 
   # Install ruby (for compass)
-  apt-get install ruby-full
-  apt-get install rubygems-integration
+  yum install -y ruby
+  yum install -y rubygems
   
   # Install compass
   gem update --system
@@ -51,19 +59,30 @@ install_packages() {
 
   # Install other software.
   phase_log "Installing other software..."
-  apt-get install -y imagemagick default-jdk unzip git wget
+  yum install -y imagemagick gcc php-devel php-pear unzip wget
 
   # Install node.js.
   phase_log "Installing node.js..."
-  apt-get install -y nodejs npm nodejs-legacy
+  yum install -y nodejs npm nodejs-legacy
 
   # Install (Google) chrome.
   phase_log "Installing (Google) chrome..."
-  cd /tmp
-  wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-  dpkg -i google-chrome-stable_current_amd64.deb
-  apt-get -fy install
-  rm google-chrome-stable_current_amd64.deb
+
+  wget http://chrome.richardlloyd.org.uk/install_chrome.sh
+  chmod u+x install_chrome.sh
+  ./install_chrome.sh
+  
+  cat << 'EOF' > /etc/yum.repos.d/google-chrome.repo
+[google-chrome]
+name=google-chrome
+baseurl=http://dl.google.com/linux/chrome/rpm/stable/$basearch
+enabled=1
+gpgcheck=1
+gpgkey=https://dl-ssl.google.com/linux/linux_signing_key.pub
+EOF
+
+#  chmod u+rw /etc/yum.repos.d/google-chrome.repo
+#  yum install google-chrome-stable
 
   # Install chromedriver.
   phase_log "Installing chromedriver..."
