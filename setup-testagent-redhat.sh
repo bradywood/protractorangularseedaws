@@ -45,6 +45,8 @@ install_packages() {
   # yum search xvfb
   yum install -y xorg-x11-server-Xvfb
 
+  #install the extra packages
+  yum install epel-release
   
   #apt-get install -y xvfb x11-xkb-utils xfonts-100dpi \
   #xfonts-75dpi xfonts-scalable xfonts-cyrillic xserver-xorg-core dbus-x11 libfontconfig1-dev
@@ -59,11 +61,14 @@ install_packages() {
 
   # Install other software.
   phase_log "Installing other software..."
-  yum install -y imagemagick gcc php-devel php-pear unzip wget
+  yum install -y ImageMagick gcc php unzip wget
 
   # Install node.js.
   phase_log "Installing node.js..."
-  yum install -y nodejs npm nodejs-legacy
+  sudo yum install nodejs npm --enablerepo=epel
+  #curl -sL https://rpm.nodesource.com/setup | bash -
+  #yum install -y nodejs
+  #yum install -y nodejs npm nodejs-legacy
 
   # Install (Google) chrome.
   phase_log "Installing (Google) chrome..."
