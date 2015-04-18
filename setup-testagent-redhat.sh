@@ -36,8 +36,9 @@ check_prerequisites() {
 }
 
 install_packages() {
-  # enable the optional redhat packages
-  subscription-manager repos --enable rhel-6-server-optional-rpms
+  
+  sudo yum -y install firefox Xvfb libXfont Xorg 
+  sudo yum -y groupinstall "X Window System" "Desktop" "Fonts" "General Purpose Desktop"
 
   # Install Xvfb.
   phase_log "Installing xvfb..."
@@ -50,6 +51,7 @@ install_packages() {
   
   #apt-get install -y xvfb x11-xkb-utils xfonts-100dpi \
   #xfonts-75dpi xfonts-scalable xfonts-cyrillic xserver-xorg-core dbus-x11 libfontconfig1-dev
+  yum install libxml2-devel libxslt-devel zlib-devel python-devel
 
   # Install ruby (for compass)
   yum install -y ruby
